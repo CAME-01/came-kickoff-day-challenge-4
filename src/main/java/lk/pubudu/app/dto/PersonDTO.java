@@ -1,6 +1,7 @@
 package lk.pubudu.app.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class PersonDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1099389437728308115L;
