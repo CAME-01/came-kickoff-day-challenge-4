@@ -7,6 +7,7 @@ import lk.pubudu.app.entity.Person;
 import lk.pubudu.app.repository.PersonRepository;
 import lk.pubudu.app.util.Transformer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,13 +20,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PersonService {
 
-    private static final String URL = "https://microsoftedge.github.io/Demos/json-dummy-data/64KB.json";
     private final Transformer transformer;
     private final PersonRepository personRepository;
+    @Value("${person.data.url}")
+    private String url;
 
     @PostConstruct
     @Transactional(rollbackOn = Throwable.class)
     public void init() {
+        System.out.println("Loaded URL from properties: " + url);
+
         // Delete all existing records before inserting new ones
         personRepository.deleteAll();
         System.out.println("Cleared existing records in the database.");
@@ -39,7 +43,7 @@ public class PersonService {
     public List<PersonDTO> fetchJsonData() {
         RestTemplate restTemplate = new RestTemplate();
 
-        ResponseEntity<PersonDTO[]> response = restTemplate.getForEntity(URL, PersonDTO[].class);
+        ResponseEntity<PersonDTO[]> response = restTemplate.getForEntity(url, PersonDTO[].class);
         assert response.getBody() != null;
         List<PersonDTO> persons = Arrays.asList(response.getBody());
 
