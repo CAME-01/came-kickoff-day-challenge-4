@@ -20,7 +20,7 @@ public class Transformer {
         return PersonDTO.builder()
                 .id(String.valueOf(person.getId()))
                 .name(person.getName())
-                .language(person.getName())
+                .language(person.getLanguage())
                 .bio(person.getBio())
                 .version(Double.valueOf(person.getVersion()))
                 .build();

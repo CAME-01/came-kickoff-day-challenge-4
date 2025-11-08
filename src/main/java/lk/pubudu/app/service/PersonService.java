@@ -29,11 +29,6 @@ public class PersonService {
     @Transactional(rollbackOn = Throwable.class)
     public void init() {
         System.out.println("Loaded URL from properties: " + url);
-
-        // Delete all existing records before inserting new ones
-        personRepository.deleteAll();
-        System.out.println("Cleared existing records in the database.");
-
         System.out.println("Initial fetch on startup...");
         List<PersonDTO> personDTOS = fetchJsonData();
         persistToMySql(personDTOS);
@@ -44,7 +39,9 @@ public class PersonService {
         RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<PersonDTO[]> response = restTemplate.getForEntity(url, PersonDTO[].class);
-        assert response.getBody() != null;
+        if (response.getBody() == null) {
+            throw new IllegalStateException("No data received from " + url);
+        }
         List<PersonDTO> persons = Arrays.asList(response.getBody());
 
         System.out.println("Fetched " + persons.size() + " persons");
